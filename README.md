@@ -1,38 +1,34 @@
-# font-spider
+# 字蛛（font-spider）
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Node.js Version][node-version-image]][node-version-url]
 [![Build Status][travis-ci-image]][travis-ci-url]
 
-[[简体中文]](./README-ZH-CN.md) | [[English]](./README.md) | [[日本語]](./README-JA.md)
-
-Font-spider is a compress tool for WebFont which can analyze your web-page intelligently to find the fonts out which have been used and then compress them.
-
 字蛛是一个智能 WebFont 压缩工具，它能自动分析出页面使用的 WebFont 并进行按需压缩。
 
-フォント・スパイダー（font-spider）は、Webフォントを圧縮するためのスマートなツールです，Webページに使用されるWebフォントを分析し、必要に応じて圧縮することができます。
+<img alt="font-spider 命令行界面" width="670" src="https://cloud.githubusercontent.com/assets/1791748/15415184/8bc574ac-1e73-11e6-92b9-515281620e9d.png">
 
-------------------
+## 特性
 
-<img alt="font-spider" width="670" src="https://cloud.githubusercontent.com/assets/1791748/15415184/8bc574ac-1e73-11e6-92b9-515281620e9d.png">
+1. 压缩字体：智能删除没有被使用的字形数据，大幅度减少字体体积
+2. 生成字体：支持 woff2、woff、eot、svg 字体格式生成
 
-## Feature
 
-1. Font subsetter: Our tool is based on HTML and CSS analysis and completely running in local so that.
-2. Font converter: Support woff2, woff, eot, svg font format generation.
+## 安装
 
-## Install
+安装好 [nodejs](http://nodejs.org)，然后执行：
 
 ``` shell
 npm install font-spider -g
 ```
 
-## Use
+## 使用范例
 
-### step one: code CSS
+### 一、书写 CSS
 
 ``` css
+/*声明 WebFont*/
 @font-face {
   font-family: 'source';
   src: url('../font/source.eot');
@@ -46,14 +42,15 @@ npm install font-spider -g
   font-style: normal;
 }
 
+/*使用指定字体*/
 .home h1, .demo > .test {
     font-family: 'source';
 }
 ```
 
-> Attention: the ".ttf" file must be existed which is referred in `src` property of `@font-face`, and our font-spider will automatically generate other formats of font.
+> 特别说明： `@font-face` 中的 `src` 定义的 .ttf 文件必须存在，其余的格式将由工具自动生成
 
-### step two: compress WebFont by using font-spider
+### 二、压缩 WebFont
 
 ``` shell
 font-spider [options] <htmlFile1 htmlFile2 ...>
@@ -61,9 +58,9 @@ font-spider [options] <htmlFile1 htmlFile2 ...>
 
 #### htmlFiles
 
-One or more web-page addresses which support the http form.
+一个或多个页面地址，支持 http 形式。
 
-Example:
+例如：
 
 ``` shell
 font-spider dest/news.html dest/index.html dest/about.html
@@ -72,71 +69,62 @@ font-spider dest/news.html dest/index.html dest/about.html
 #### options
 
 ```
-Usage: font-spider [options] <htmlFile ...>
-
-Options:
-
-  -h, --help                    output usage information
-  -V, --version                 output the version number
-  --info                        show only webfont information
-  --ignore <pattern>            ignore the files
-  --map <remotePath,localPath>  mapping the remote path to the local
-  --no-backup                   do not back up fonts
-  --debug                       enable debug mode
+-h, --help                    输出帮助信息
+-V, --version                 输出当前版本号
+--info                        输出 WebFont 的 JSON 描述信息，不压缩与转码
+--ignore <pattern>            忽略的文件配置（支持正则表达式）
+--map <remotePath,localPath>  映射 CSS 内部 HTTP 路径到本地（支持正则表达式）
+--no-backup                   关闭字体备份功能
+--debug                       调试模式，打开它可以显示 CSS 解析错误
 ```
 
-#### sample of parameters usage
+#### 参数使用示例
 
-Use the wildcard character to compress the WebFont of several HTML file:
+使用通配符压缩多个 HTML 文件关联的 WebFont：
 
 ``` shell
 font-spider dest/*.html
 ```
 
-`--info` Show the WebFont that has been used on the website:
+`--info` 查看网站所应用的 WebFont：
 
 ``` shell
 font-spider --info http://fontawesome.io
 ```
 
-`--ignore` Ignore the file:
+`--ignore` 忽略文件：
 
 ``` shell
 font-spider --ignore "icon\\.css$" dest/*.html
 ```
 
-`--map` This parameter will map the WebFont of online page to local and then compress it (the local path must be an absolute path):
+`--map` 参数将线上的页面的 WebFont 映射到本地来进行压缩（本地路径必须使用绝对路径）：
 
 ``` shell
 font-spider --map "http://font-spider.org/font,/Website/font" http://font-spider.org/index.html
 ```
 
-## Build plugins
-
-- [grunt-font-spider](https://github.com/aui/grunt-font-spider)
-- [gulp-font-spider](https://github.com/aui/gulp-font-spider)
-
 ## API
 
-See:[API.md](./API.md)
+font-spider 包括爬虫与压缩器模块，接口文档：[API.md](./API.md)
 
-## Limitations
+## 限制
 
-- Only the constant texts and styles are supported, but not the dynamic elements and styles which is inserted by javascript.
-- The ".otf" format fonts should be transfered to ".ttf" format firstly, so that we can start our compressing work.
-- Only the HTML and CSS files which is encoded by `utf-8` are supported.
+- 不支持 javascript 动态插入的元素与样式
+- .otf 字体需要转换成 .ttf 格式才能被压缩（[免费 ttf 字体资源](#免费字体)）
+- 仅支持 `utf-8` 编码的 HTML 与 CSS 文件
+- CSS `content` 仅支持 `content: 'prefix'` 和 `content: attr(value)` 这两种形式
 
-[npm-image]: https://img.shields.io/npm/v/font-spider.svg
-[npm-url]: https://npmjs.org/package/font-spider
-[node-version-image]: https://img.shields.io/node/v/font-spider.svg
-[node-version-url]: http://nodejs.org/download/
-[downloads-image]: https://img.shields.io/npm/dm/font-spider.svg
-[downloads-url]: https://npmjs.org/package/font-spider
-[travis-ci-image]: https://travis-ci.org/aui/font-spider.svg?branch=master
-[travis-ci-url]: https://travis-ci.org/aui/font-spider
+## 字体兼容性参考
 
------------------
+| 格式      | IE   | Edge | Firefox | Chrome | Safari | Opera | iOS Safari | Android Browser | Chrome for Android |
+| -------  | ---- | ---- | ------- | ------ | ------ | ----- | ---------- | --------------- | ------------------ |
+| `.eot`   | 6    | \-\- | \-\-    | \-\-   | \-\-   | \-\-  | \-\-       | \-\-            | \-\-               |
+| `.woff`  | 9    | 13   | 3.6     | 5      | 5.1    | 11.1  | 5.1        | 4.4             | 36                 |
+| `.woff2` | \-\- | 14   | 39      | 36     | \-\-   | 23    | \-\-       | 50              | 50                 |
+| `.ttf`   | \-\- | 13   | 3.5     | 4      | 3.1    | 10.1  | 4.3        | 2.2             | 36                 |
+| `.svg`   | \-\- | \-\- | \-\-    | 4      | 3.2    | 9.6   | 3.2        | 3               | 36                 |
 
-[\[Link\] 让 font-spider 支持 js 动态内容](https://github.com/allanguys/font-spider-plus)
+来源：<http://caniuse.com/#feat=fontface>
 
-[\[AD\] 前端招聘：在海边写代码](https://juejin.im/post/5a2651d06fb9a0451c3a40ad)
+

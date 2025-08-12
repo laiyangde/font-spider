@@ -2,17 +2,17 @@
   "name": "font-spider",
   "description": "Smart webfont compression and format conversion tool",
   "version": "1.3.5",
-  "homepage": "https://github.com/aui/font-spider",
+  "homepage": "https://github.com/laiyangde/font-spider",
   "author": {
-    "name": "aui",
+    "name": "laiyangde",
     "email": "sugarpie.tang@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/aui/font-spider.git"
+    "url": "git://github.com/laiyangde/font-spider.git"
   },
   "bugs": {
-    "url": "https://github.com/aui/font-spider/issues"
+    "url": "https://github.com/laiyangde/font-spider/issues"
   },
   "bin": {
     "font-spider": "bin/font-spider"
